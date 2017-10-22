@@ -20,7 +20,7 @@ public class convertToXML {
     public String convertFromJSON(JSONObject json) throws ParserConfigurationException {
 
         String duration = XML.toString(json).substring(XML.toString(json).indexOf(">") + 1, XML.toString(json).indexOf("</loanDuration"));
-        LocalDate localDate = LocalDate.now().plusDays(Integer.parseInt(duration));
+        LocalDate localDate = LocalDate.now().plusMonths(Integer.parseInt(duration));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedString = localDate.format(formatter);
 

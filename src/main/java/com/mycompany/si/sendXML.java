@@ -5,6 +5,7 @@
  */
 package com.mycompany.si;
 
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -27,12 +28,18 @@ public class sendXML {
 
         channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
 
-        JSONObject json = new JSONObject("{\"ssn\": 11605789787,\"creditScore\": 598,\"loanAmount\": 10.0,\"loanDuration\": 360}");
+        JSONObject json = new JSONObject("{\"ssn\": 1160578787,\"creditScore\": 598,\"loanAmount\": 10.0,\"loanDuration\": 360}");
         
         convertToXML ctx = new convertToXML();
         String message = ctx.convertFromJSON(json);
+        
+        AMQP.BasicProperties.Builder builder = new AMQP.BasicProperties().builder();
+        
+        builder.replyTo("kkc-receiver");
+        
+        AMQP.BasicProperties prop = builder.build();
 
-        channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes());
+        channel.basicPublish(EXCHANGE_NAME, "", prop, message.getBytes());
         System.out.println(" [x] Sent '" + message.toString() + "'");
 
         channel.close();
